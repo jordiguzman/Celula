@@ -1,0 +1,24 @@
+Esto sirve para leer el valor del color en la capa FondoCuadricula. Hay que implementar en la MainActivity onTouch (ver ChatGPT)
+
+inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            // Obtén las coordenadas del toque
+            val x = e.x.toInt()
+            val y = e.y.toInt()
+
+            // Calcula la fila y columna correspondiente en tu matriz
+            val tileSizeWith = fondoCuadricula.width / fondoCuadricula.numRows
+            val tileSizeHeight = fondoCuadricula.height / fondoCuadricula.numColumns
+            val row = x / tileSizeWith
+            val column = y / tileSizeHeight
+
+            if (row >= 0 && row < fondoCuadricula.numRows && column >= 0 && column < fondoCuadricula.numColumns) {
+                val color = fondoCuadricula.colorArray[row][column]
+                // Muestra el valor de color, por ejemplo, en un Toast
+                Log.d(TAG, "Color: $color")
+                //Toast.makeText(MainActivity(this), "Color: $color", Toast.LENGTH_SHORT).show()
+            }
+
+            return true
+        }
+    }

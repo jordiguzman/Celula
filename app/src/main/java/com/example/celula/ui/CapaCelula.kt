@@ -13,7 +13,7 @@ import android.view.View
 
 
 @SuppressLint("ViewConstructor")
-class CapaCelula(context: Context, private var fondoCuadricula: FondoCuadricula) : View(context) {
+class CapaCelula(context: Context) : View(context) {
 
     private var posX = 0f
     private var posY = 0f
@@ -59,25 +59,21 @@ class CapaCelula(context: Context, private var fondoCuadricula: FondoCuadricula)
 
             paint.color = circle.color
             canvas.drawCircle(circle.x, circle.y, circle.radius, paint)
+
         }
         if (posX - radius < 0 || posX + radius > width) {
             speed *= -1
         }
 
     }
-    // Método para establecer la referencia a FondoCuadricula
-    fun setFondoCuadricula(fondoCuadricula: FondoCuadricula) {
-        this.fondoCuadricula = fondoCuadricula
-    }
+
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // Solo manejar eventos táctiles cuando no se toca la parte superpuesta con FondoCuadricula
         // Verifica si la referencia a fondoCuadricula es nula
-        if (event.x < fondoCuadricula.width && event.y < fondoCuadricula.height) {
-            return super.onTouchEvent(event)
-        }
+
         posX = event.x
         posY = event.y
         when (event.action) {
@@ -86,11 +82,11 @@ class CapaCelula(context: Context, private var fondoCuadricula: FondoCuadricula)
                     event.x ,
                     event.y ,
                     radius,
-                    Color.BLUE,
+                    Color.RED,
                     2f)
                 circles.add(newCircle)
                 createNewCircleThread(newCircle)
-                //invalidate()
+                invalidate()
                 return true
             }
         }

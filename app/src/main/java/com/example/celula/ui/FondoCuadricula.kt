@@ -9,18 +9,22 @@ import android.graphics.Paint
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import kotlin.random.Random
 
 
 class FondoCuadricula(context: Context): View(context) {
 
     private val random = Random(System.currentTimeMillis())
-    val numRows = 12
-    val numColumns = 20
+    private val numRows = 12
+    private val numColumns = 20
     private val countArray = Array(numRows) { IntArray(numColumns) }
-    val colorArray = Array(numRows) { IntArray(numColumns) }
+    private val colorArray = Array(numRows) { IntArray(numColumns) }
     private var count = 0
+    private var celula: Celula? = null
+    private val tileSizeWith = (width / numRows)
+    private val tileSizeHeight = (height / numColumns)
+    private var  celulaX = 0f
+    private var celulaY =0f
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
@@ -30,7 +34,7 @@ class FondoCuadricula(context: Context): View(context) {
         val height = height
         val tileSizeWith = width / 12
         val tileSizeHeight = height / 20
-
+        Log.d(TAG, "$width--$height")
         // Draw the checkerboard squares
         for (i in 0 until 12) {
             for (j in 0 until 20) {
@@ -49,31 +53,42 @@ class FondoCuadricula(context: Context): View(context) {
             }
         }
 
+        //celula?.draw(canvas, x, y, tileSizeWith.toFloat(), tileSizeHeight.toFloat())
+
+
+
     }
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // Obtén las coordenadas del toque
-                val x = event.x.toInt()
-                val y = event.y.toInt()
+                // Calcula la posición de la cuadrícula donde se tocó
+                val touchedX = (event.x / tileSizeWith).toInt()
+                val touchedY = (event.y / tileSizeHeight).toInt()
 
-                // Calcula la fila y columna correspondiente en tu matriz
-                val tileSizeWith = width / numRows
-                val tileSizeHeight = height / numColumns
-                val row = x / tileSizeWith
-                val column = y / tileSizeHeight
+                // Calcula las coordenadas del centro del cuadrado tocado
+                celulaX = touchedX.toFloat()
+                celulaY = touchedY.toFloat()
 
-                if (row in 0..<numRows && column >= 0 && column < numColumns) {
-                    val color = colorArray[row][column]
-                    // Muestra el valor de color, por ejemplo, en un Toast
-                    //Toast.makeText(context, "Color: $color", Toast.LENGTH_SHORT).show()
-                    Log.d(TAG,"Color: $color" )
-                }
+
+
+
+
+                // Ajusta las coordenadas de la célula para que esté en el centro del cuadrado tocado
+                celulaX += tileSizeWith / 2
+                celulaY += tileSizeHeight / 2
+                // Crea una instancia de Celula en el centro del cuadrado tocado
+                celula = Celula(context)
+                // Redibuja la vista para mostrar la célula
+
             }
         }
         return true
     }
+
+
+
+
     private val paint = Paint()
 }
 
